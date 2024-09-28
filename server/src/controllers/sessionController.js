@@ -10,36 +10,35 @@ module.exports = class {
       const availableHours = {
         Monday: [
           { start: "08:00", end: "12:00" },
-          { start: "14:00", end: "15:30" },
+          { start: "12:00", end: "14:30" },
         ],
         Tuesday: [
-          { start: "8:00", end: "12:00" },
-          { start: "14:00", end: "15:30" },
+          { start: "08:00", end: "12:00" },
+          { start: "12:00", end: "15:30" },
         ],
-        Wednesday: [{ start: "08:00", end: "12:00" }],
-        Thursday: [{ start: "08:00", end: "15:30" }],
+        Wednesday: [{ start: "08:00", end: "14:00" }],
+        Thursday: [{ start: "10:00", end: "15:30" }],
         Friday: [],
         Saturday: [],
         Sunday: [],
       };
-
       const { start_date, group, session_duration } = req.body;
 
-      const students = await studentService.findStudentByGroup(group);
-      const ttal_shift = 5;
+      const totalShifts = 14; // Change this number to test different cases
       const sched = schedualer(
         availableHours,
         session_duration,
-        ttal_shift,
+        totalShifts,
         start_date
       );
+      console.log(sched);
       const schedule = await sessionServices.createSessions(
         [...sched].map((el) => ({ ...el, group }))
       );
       res.json(schedule);
     } catch (e) {
       console.log(e);
-      next(e)
+      next(e);
     }
   }
 
@@ -64,7 +63,7 @@ module.exports = class {
       res.json(session);
     } catch (e) {
       console.log(e);
-      next(e)
+      next(e);
     }
   }
 
@@ -84,7 +83,7 @@ module.exports = class {
       res.json(NewSession);
     } catch (e) {
       console.log(e);
-      next(e)
+      next(e);
     }
   }
 
@@ -96,7 +95,7 @@ module.exports = class {
       res.json(session);
     } catch (e) {
       console.log(e);
-      next(e)
+      next(e);
     }
   }
 
@@ -106,7 +105,7 @@ module.exports = class {
       res.json(sessions);
     } catch (e) {
       console.log(e);
-      next(e)
+      next(e);
     }
   }
 
@@ -118,7 +117,19 @@ module.exports = class {
       res.json({ student, session });
     } catch (e) {
       console.log(e);
-      next(e)
+      next(e);
+    }
+  }
+
+  async getSessionsByDate(req, res, next) {
+    try {
+      const { date } = req.query;
+      const sessions = await sessionServices.getSessionsByDate(date);
+      sessions.filter((e) => e.students.length > 0);
+      res.json(sessions);
+    } catch (e) {
+      console.log(e);
+      next(e);
     }
   }
 };

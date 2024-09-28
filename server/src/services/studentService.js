@@ -17,5 +17,7 @@ module.exports = class {
     return await Student.findOne({ student_id });
   }
 
-
+  async deleteStudent(student_id) {
+    return await Student.deleteOne({ student_id });
+  }
 };

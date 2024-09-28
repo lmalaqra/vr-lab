@@ -1,27 +1,21 @@
 function convertToSlots(timeSlots, shiftLength) {
     const slots = [];
-    const minStartTime = new Date(`1970-01-01T08:00:00`);
-    const maxEndTime = new Date(`1970-01-01T15:30:00`);
+    const shiftMinutes = shiftLength * 60; // Convert shift length to minutes
 
     for (const { start, end } of timeSlots) {
         const startTime = new Date(`1970-01-01T${start}:00`);
         const endTime = new Date(`1970-01-01T${end}:00`);
 
-        // Ensure start and end times are within valid range
-        if (startTime < minStartTime || endTime > maxEndTime || startTime >= endTime) {
-            continue; // Skip invalid time slots
-        }
-
         // Loop to create slots
         while (startTime < endTime) {
-            const nextSlotEnd = new Date(startTime.getTime() + shiftLength * 60 * 60 * 1000);
-            if (nextSlotEnd > endTime || nextSlotEnd > maxEndTime) break; // Stop if the next slot goes beyond the end time
+            const nextSlotEnd = new Date(startTime.getTime() + shiftMinutes * 60 * 1000);
+            if (nextSlotEnd > endTime) break; // Stop if the next slot goes beyond the end time
             slots.push({
                 start: startTime.toTimeString().slice(0, 5), // Get HH:MM format
                 end: nextSlotEnd.toTimeString().slice(0, 5), // Get HH:MM format
                 length: shiftLength
             });
-            startTime.setHours(startTime.getHours() + shiftLength);
+            startTime.setMinutes(startTime.getMinutes() + shiftMinutes); // Move to the next slot
         }
     }
 
@@ -41,10 +35,14 @@ function distributeShifts(availableHours, shiftLength, totalShifts, startDate) {
     let totalAvailableSlots = 0;
     const today = new Date(startDate); // Use the provided start date
 
+    // Calculate total available slots
     for (const day in availableHours) {
         const slots = convertToSlots(availableHours[day], shiftLength);
         totalAvailableSlots += slots.length;
+        console.log(`Available slots on ${day}:`, slots.length); // Debugging line
     }
+
+    console.log(`Total available slots: ${totalAvailableSlots}`); // Debugging line
 
     if (totalAvailableSlots < totalShifts) {
         return "Not enough available hours to distribute the shifts.";
@@ -77,18 +75,8 @@ function distributeShifts(availableHours, shiftLength, totalShifts, startDate) {
     return shifts;
 }
 
-// Example Usage
+// Example usage
 
 
 
-
-// Example Usage
-
-
-
-
-
-module.exports= distributeShifts;
-
-
-
+module.exports = distributeShifts;

@@ -12,4 +12,7 @@ router
 
 
   router.route('/student').get(sessionController.getStudentSession)
+  router.route('/admin').get(sessionController.getSessionsByDate)
+  
+  
 module.exports = router;

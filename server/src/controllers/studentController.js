@@ -34,4 +34,28 @@ module.exports = class {
       next(e);
     }
   }
+
+  async createStudent(req, res, next) {
+    const { student_id, group, name } = req.body;
+    const email = `s${student_id}@stu.najah.edu`;
+    const created_student = { student_id, group, name, email };
+    try {
+      const student = await studentservices.createStudent(created_student);
+      res.json(student);
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  }
+  async deleteStudent(req, res, next) {
+    const { student_id } = req.query;
+
+    try {
+      await studentservices.deleteStudent(student_id);
+      res.send("sucess");
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  }
 };

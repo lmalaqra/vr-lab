@@ -48,4 +48,10 @@ module.exports = class {
   async getStudentSession(student_id) {
     return await Session.findOne({ "students.student_id": student_id });
   }
+
+  async getSessionsByDate(date){
+
+
+    return await Session.find({date}).sort({session_id:1})
+  }
 };
