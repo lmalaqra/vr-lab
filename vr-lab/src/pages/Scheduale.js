@@ -6,7 +6,7 @@ import Bookingviewr from "../components/Bookingviewr";
 function Scheduale() {
   const findSession = (sessions, shownsessions) => {
     const day = sessions.find((el) => el._id.date === showSessions);
-    const daysession = [...day.sessions].filter((e) => e.students.length < 5);
+    const daysession = [...day.sessions].filter((e) => e.students.length < 30);
     return daysession;
   };
 

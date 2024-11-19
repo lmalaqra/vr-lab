@@ -52,7 +52,7 @@ module.exports = class {
       const isRegistered = await sessionServices.getStudentSession(student_id);
       if (isRegistered) throw new Error("YOu are already registered");
       const session = await sessionServices.findSessionById(session_id);
-      if (session.students.length === 5)
+      if (session.students.length === 30)
         throw new Error("This session is fully booked ");
       const studentFound = session.students.find(
         (el) => el.student_id == student_id
@@ -75,7 +75,7 @@ module.exports = class {
       const student = await studentService.findStudentById(student_id);
       const NewSession = await sessionServices.findSessionById(session_id);
 
-      if (NewSession.students.length === 5)
+      if (NewSession.students.length === 30)
         throw new Error("This session is fully booked");
       NewSession.students.push(student);
       await NewSession.save();
