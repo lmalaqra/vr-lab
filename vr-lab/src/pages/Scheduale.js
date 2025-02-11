@@ -6,7 +6,7 @@ import Bookingviewr from "../components/Bookingviewr";
 function Scheduale() {
   const findSession = (sessions, shownsessions) => {
     const day = sessions.find((el) => el._id.date === showSessions);
-    const daysession = [...day.sessions].filter((e) => e.students.length < 30);
+    const daysession = [...day.sessions].filter((e) => e.students.length < 2);
     return daysession;
   };
 
@@ -102,8 +102,7 @@ function Scheduale() {
     <div>
       <h1 className="text-center head mt-4 text-lg tracking-wide"> Please chose An appiontment </h1>
       <h3 className="text-center font-serif w-3/6 mx-auto ">
-        **Make sure that the appointment doesn't interfere with other lectures or
-        labs
+        **Make sure you and the patient are not late to the appointment 
       </h3>
       <Bookingviewr
         setBooked={setBooked}

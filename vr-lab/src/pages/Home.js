@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Scheduale from "./Scheduale";
 import Login from "./Login";
+import { UserContext } from "../App";
 
 function Home() {
-  const [loggedin, setLoggedIn] = useState(false);
+  const {loggedin, setLoggedIn} =useContext(UserContext)
 
   useEffect(() => {
     const student = localStorage.getItem("student_id");

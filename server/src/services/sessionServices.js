@@ -1,4 +1,5 @@
 const Session = require("../models/Session");
+const { Student } = require("../models/Students");
 
 module.exports = class {
   async createSessions(sessions) {
@@ -53,5 +54,13 @@ module.exports = class {
 
 
     return await Session.find({date}).sort({session_id:1})
+  }
+
+  async updateAttendece(student_ids){
+
+    return await Student.updateMany({student_id:{$in:student_ids}},{$inc:{session:1}})
+  }
+  async endSeesion(_id){
+    return await Session.updateOne({_id},{isDeleted:true})
   }
 };

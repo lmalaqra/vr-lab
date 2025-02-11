@@ -4,7 +4,8 @@ const studentScehma = new mongoose.Schema({
   student_id:String,
   name:String,
   group:String || Number,
-  email:String
+  email:String,
+ 
 });
 
 const Student = mongoose.model("student", studentScehma);

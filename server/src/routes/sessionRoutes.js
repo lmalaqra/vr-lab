@@ -11,7 +11,7 @@ router
   .delete(sessionController.clearBooking);
 
 
-  router.route('/student').get(sessionController.getStudentSession)
+  router.route('/student').get(sessionController.getStudentSession).delete(sessionController.deleteStudentBooking).put(sessionController.attendence)
   router.route('/admin').get(sessionController.getSessionsByDate)
   
   

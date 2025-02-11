@@ -8,23 +8,20 @@ module.exports = class {
   async createSessions(req, res, next) {
     try {
       const availableHours = {
-        Monday: [
-          { start: "08:00", end: "12:00" },
-          { start: "12:00", end: "14:30" },
-        ],
-        Tuesday: [
-          { start: "08:00", end: "12:00" },
-          { start: "12:00", end: "15:30" },
-        ],
+        Monday: [{ start: "08:00", end: "14:00" }],
+        Tuesday: [{ start: "08:00", end: "14:00" }],
         Wednesday: [{ start: "08:00", end: "14:00" }],
-        Thursday: [{ start: "10:00", end: "15:30" }],
-        Friday: [],
-        Saturday: [],
-        Sunday: [],
-      };
-      const { start_date, group, session_duration } = req.body;
+        Thursday: [{ start: "08:00", end: "14:00" }],
 
-      const totalShifts = 14; // Change this number to test different cases
+        Friday: [], 
+        Saturday: [],
+        Sunday: [{ start: "08:00", end: "14:00" }],
+
+        
+      };
+      const { start_date, session_duration } = req.body;
+
+      const totalShifts = 36; // Change this number to test different cases
       const sched = schedualer(
         availableHours,
         session_duration,
@@ -32,9 +29,7 @@ module.exports = class {
         start_date
       );
       console.log(sched);
-      const schedule = await sessionServices.createSessions(
-        [...sched].map((el) => ({ ...el, group }))
-      );
+      const schedule = await sessionServices.createSessions(sched);
       res.json(schedule);
     } catch (e) {
       console.log(e);
@@ -52,7 +47,7 @@ module.exports = class {
       const isRegistered = await sessionServices.getStudentSession(student_id);
       if (isRegistered) throw new Error("YOu are already registered");
       const session = await sessionServices.findSessionById(session_id);
-      if (session.students.length === 30)
+      if (session.students.length === 2)
         throw new Error("This session is fully booked ");
       const studentFound = session.students.find(
         (el) => el.student_id == student_id
@@ -75,7 +70,7 @@ module.exports = class {
       const student = await studentService.findStudentById(student_id);
       const NewSession = await sessionServices.findSessionById(session_id);
 
-      if (NewSession.students.length === 30)
+      if (NewSession.students.length === 2)
         throw new Error("This session is fully booked");
       NewSession.students.push(student);
       await NewSession.save();
@@ -129,6 +124,27 @@ module.exports = class {
       res.json(sessions);
     } catch (e) {
       console.log(e);
+      next(e);
+    }
+  }
+
+  async deleteStudentBooking(req, res, next) {
+    try {
+      const { student_id } = req.query;
+      await sessionServices.removeStudentFromSession(student_id);
+      res.status(200).send("sucess");
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  }
+  async attendence(req, res, next) {
+    const { student_ids, _id } = req.body;
+    try {
+      await sessionServices.updateAttendece(student_ids);
+      await sessionServices.endSeesion(_id);
+      res.status(200).send("success");
+    } catch (e) {
       next(e);
     }
   }

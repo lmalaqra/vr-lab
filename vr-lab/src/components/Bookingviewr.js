@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 
 function Bookingviewr({ setBooked, booked, setChangeActive }) {
   const [data, setData] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   const getDayName = (date) => {
     const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu"];
     const day = new Date(date).getDay();
@@ -27,7 +28,22 @@ function Bookingviewr({ setBooked, booked, setChangeActive }) {
       }
     };
     fetchData();
-  }, []);
+  }, [refresh]);
+
+  const deleteBooking = async () => {
+    const student_id = localStorage.getItem("student_id");
+    try {
+      await axios.delete(
+        process.env.REACT_APP_BASE_URL +
+          "/session/student?student_id=" +
+          student_id
+      );
+      setRefresh(!refresh);
+      setBooked(false)
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <div className="my-6 ">
@@ -58,7 +74,7 @@ function Bookingviewr({ setBooked, booked, setChangeActive }) {
                 setBooked(!booked);
                 setChangeActive((prev) => !prev);
               }}
-              className="bg-red-600 text-white px-2 my-2"
+              className="bg-blue-600 text-white px-2 my-2"
             >
               Change Appointment
             </button>
@@ -71,6 +87,11 @@ function Bookingviewr({ setBooked, booked, setChangeActive }) {
               className="bg-black text-white px-2 my-2"
             >
               Cancel
+            </button>
+          )}
+          {booked && (
+            <button onClick={deleteBooking} className="bg-red-600 text-white px-2  ml-4">
+              Cancel Appointment
             </button>
           )}
         </div>

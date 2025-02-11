@@ -7,14 +7,10 @@ module.exports = class {
     try {
       const students = await csv().fromFile(req.file.path);
 
-      const group = req.body.group;
-      const modStudents = [...students].map((el) => ({
-        ...el,
-        group: req.body.group,
-      }));
+      
 
       const createdStudents = await studentservices.createMMultipleStudents(
-        modStudents
+        students
       );
       res.json(createdStudents);
     } catch (e) {
