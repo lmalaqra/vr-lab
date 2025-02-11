@@ -5,6 +5,7 @@ const studentScehma = new mongoose.Schema({
   name:String,
   group:String || Number,
   email:String,
+  password:String
  
 });
 

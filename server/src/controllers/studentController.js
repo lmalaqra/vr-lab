@@ -1,13 +1,12 @@
 const csv = require("csvtojson");
 const StudentsServices = require("../services/studentService");
 const studentservices = new StudentsServices();
+const bcrypt = require("bcryptjs");
 
 module.exports = class {
   async createStudentsFromFile(req, res, next) {
     try {
       const students = await csv().fromFile(req.file.path);
-
-      
 
       const createdStudents = await studentservices.createMMultipleStudents(
         students
@@ -51,6 +50,37 @@ module.exports = class {
       res.send("sucess");
     } catch (e) {
       console.log(e);
+      next(e);
+    }
+  }
+  async registerStudent(req, res, next) {
+    const { registered } = req.query;
+    const newStudent = req.body;
+
+    try {
+      if (registered==="false") {
+
+        const student = await studentservices.findStudentById(
+          newStudent.student_id
+        );
+        student.password = await bcrypt.hash(newStudent.password, 10);
+        await student.save();
+        res.status(200).json(student);
+      } else {
+        console.log(newStudent)
+
+        const student = await studentservices.findStudentById(
+          newStudent.student_id
+        );
+        bcrypt
+          .compare(newStudent.password, student.password)
+          .then((result, err) => {
+            if (result) {
+              res.status(200).json(student);
+            } else res.status(400).send("wrong password")
+          });
+      }
+    } catch (e) {
       next(e);
     }
   }
