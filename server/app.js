@@ -17,7 +17,11 @@ const app = express();
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+var corsOptions={
+  origin:"*",
+  optionsSuccessStatus:200
+}
+app.use(cors(corsOptions));
 app.use(express.static(path.resolve(__dirname, "../vr-lab/build")));
 var upload = multer({ dest: "uploads/" });
 
