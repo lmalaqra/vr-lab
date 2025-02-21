@@ -6,7 +6,7 @@ import Bookingviewr from "../components/Bookingviewr";
 function Scheduale() {
   const findSession = (sessions, shownsessions) => {
     const day = sessions.find((el) => el._id.date === showSessions);
-    const daysession = [...day.sessions].filter((e) => e.students.length < 2);
+    const daysession = [...day.sessions].filter((e) => e.students.length < e.max_number);
     return daysession;
   };
 
@@ -29,8 +29,9 @@ function Scheduale() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const group=localStorage.getItem('group')
         const session = await axios
-          .get(process.env.REACT_APP_BASE_URL + "/session")
+          .get(process.env.REACT_APP_BASE_URL + "/session?group=" + group)
           .then((res) => res.data);
         setsessions(session);
       } catch (e) {
@@ -47,7 +48,7 @@ function Scheduale() {
       setRequest((prev) => ({ ...prev, loading: true }));
       const bookedSession = await axios
         .put(process.env.REACT_APP_BASE_URL + "/session", {
-          session_id: selectedSession,
+          _id: selectedSession,
           student_id,
         })
         .then((res) => res.data);
@@ -76,7 +77,7 @@ function Scheduale() {
       setRequest((prev) => ({ ...prev, loading: true }));
       const bookedSession = await axios
         .patch(process.env.REACT_APP_BASE_URL + "/session", {
-          session_id: selectedSession,
+          _id: selectedSession,
           student_id,
         })
         .then((res) => res.data);
@@ -128,12 +129,8 @@ function Scheduale() {
                 className="flex flex-col  justify-start hover:scale-110 w-2/5  text-base py-1"
               >
                 <div className="bg-blue-700 text-white text-center mb-7">
-                  <h1 className="font-bold">
-                    {el._id.date.split("-")[2] +
-                      "/" +
-                      el._id.date.split("-")[1]}
-                  </h1>
-                  <h1 className="font-bold">{getDayName(el._id.date)}</h1>
+                 
+                  <h1 className="font-bold text-xl py-2">{getDayName(el._id.date)}</h1>
                 </div>
                 <div></div>
               </div>
@@ -149,10 +146,10 @@ function Scheduale() {
                 <div>
                   <div
                     onClick={() => {
-                      setSelectedSession(e.session_id);
+                      setSelectedSession(e._id);
                     }}
                     className={`${
-                      selectedSession === e.session_id &&
+                      selectedSession === e._id &&
                       "border border-blue-700 "
                     } shadow-md w-full flex flex-col px-4 gap-2 bg-slate-50 hover:scale-105 hover:cursor-pointer `}
                   >
@@ -162,7 +159,7 @@ function Scheduale() {
                     <h1 className="text-sm">
                       Registered : {e.students.length}
                     </h1>
-                    {selectedSession === e.session_id && (
+                    {selectedSession === e._id && (
                       <button
                         onClick={() => {
                           if (changeActive) changeBooking();

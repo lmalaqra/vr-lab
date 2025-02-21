@@ -20,4 +20,11 @@ module.exports = class {
   async deleteStudent(student_id) {
     return await Student.deleteOne({ student_id });
   }
+
+  async updateAttendece(student_ids) {
+    return await Student.updateMany(
+      { student_id: { $in: student_ids } },
+      { $inc: { attend: 1 } }
+    );
+  }
 };

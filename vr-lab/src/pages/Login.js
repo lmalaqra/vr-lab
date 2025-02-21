@@ -28,6 +28,7 @@ function Login({ setLoggedIn }) {
           )
           .then((res) => res.data);
         localStorage.setItem("student_id", student.student_id);
+        localStorage.setItem('group',student.group)
         setLoggedIn(true);
       } else {
         if (password1.password === password1.password2) {
@@ -39,6 +40,8 @@ function Login({ setLoggedIn }) {
             )
             .then((res) => res.data);
           localStorage.setItem("student_id", student.student_id);
+        localStorage.setItem('group',student.group)
+
           setLoggedIn(true);
         } else {
           setError({ isError: true, msg: "Password doesnt match" });

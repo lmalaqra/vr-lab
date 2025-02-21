@@ -8,5 +8,6 @@ router
   .get(studentController.getStudent)
   .post(studentController.createStudentsFromFile)
   .put(studentController.createStudent).delete(studentController.deleteStudent).patch(studentController.registerStudent);
+  router.route('/attend')
 
 module.exports = router;

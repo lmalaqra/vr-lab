@@ -12,7 +12,7 @@ router
 
 
   router.route('/student').get(sessionController.getStudentSession).delete(sessionController.deleteStudentBooking).put(sessionController.attendence)
-  router.route('/admin').get(sessionController.getSessionsByDate)
+  router.route('/admin').get(sessionController.getSessionsByDate).patch(sessionController.attendence)
   
   
 module.exports = router;

@@ -9,6 +9,9 @@ const sessionSchema = new mongoose.Schema({
   start: String,
   end: String,
   students: [studentScehma],
+  max_number:Number,
+  day:String,
+  isDeleted:{type:Boolean,default:false}
 });
 
 module.exports = mongoose.model("session", sessionSchema);

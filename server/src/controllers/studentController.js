@@ -7,6 +7,7 @@ module.exports = class {
   async createStudentsFromFile(req, res, next) {
     try {
       const students = await csv().fromFile(req.file.path);
+      console.log(students)
 
       const createdStudents = await studentservices.createMMultipleStudents(
         students

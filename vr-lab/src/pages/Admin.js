@@ -6,16 +6,30 @@ function Admin() {
   const [data, setData] = useState([]);
   const [session, setSession] = useState("");
   const [attendingStudents, setattendingStudents] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getDayName = (date) => {
     const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu"];
     const day = new Date(date).getDay();
     return weekDays[day];
   };
+  const dayFullName = () => {
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const day = new Date().getDay();
+    return daysOfWeek[day];
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      var today = new Date();
+      var today = new Date("2025-02-16");
       var dd = String(today.getDate()).padStart(2, "0");
       var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
       var yyyy = today.getFullYear();
@@ -25,7 +39,7 @@ function Admin() {
 
       try {
         const sessions = await axios
-          .get(process.env.REACT_APP_BASE_URL + `/session/admin?date=${date}`)
+          .get(process.env.REACT_APP_BASE_URL + `/session/admin?day=` + dayFullName())
           .then((res) => res.data);
         setData(sessions);
       } catch (e) {
@@ -35,6 +49,27 @@ function Admin() {
     fetchData();
   }, []);
 
+  const submitAttend = async () => {
+    try {
+      if(attendingStudents.length===0)return
+
+      setLoading(true);
+      await axios
+        .patch(process.env.REACT_APP_BASE_URL + `/session/admin`, {
+          student_ids: attendingStudents,
+          _id: session._id,
+        })
+        .then((res) => res.data);
+
+      const sessions = await axios
+        .get(process.env.REACT_APP_BASE_URL + `/session/admin?day=Sunday`)
+        .then((res) => res.data);
+      setData(sessions);
+      setLoading(false);
+      setattendingStudents([]);
+      setSession("");
+    } catch (e) {}
+  };
   return (
     <div>
       {!data || data.length === 0 ? (
@@ -64,7 +99,9 @@ function Admin() {
                     setattendingStudents={setattendingStudents}
                   />
                 ))}
-                <button className="bg-blue-600 text-white px-2 rounded-sm text-center mx-auto">Submit</button>
+                <button onClick={submitAttend} disabled={loading} className="bg-blue-600 text-white px-2 rounded-sm text-center mx-auto">
+                  Submit
+                </button>
               </div>
             )}
             <div className="w-1/6 mx-auto flex flex-col gap-3">

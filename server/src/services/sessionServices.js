@@ -6,8 +6,8 @@ module.exports = class {
     return await Session.insertMany(sessions);
   }
 
-  async findSessionById(session_id) {
-    return await Session.findOne({ session_id });
+  async findSessionById(_id) {
+    return await Session.findById({ _id });
   }
 
   async removeStudentFromSession(student_id) {
@@ -25,19 +25,22 @@ module.exports = class {
     );
   }
 
-  async findAllSessions() {
+  async findAllSessions(group) {
     return await Session.aggregate([
+      { $match: { group } },
       {
         $group: {
           _id: { date: "$date" },
           sessions: {
             $push: {
+              _id: "$_id",
               session_id: "$session_id",
               group: "$group",
               start: "$start",
               end: "$end",
               length: "$length",
               students: "$students",
+              max_number: "$max_number",
             },
           },
         },
@@ -50,17 +53,17 @@ module.exports = class {
     return await Session.findOne({ "students.student_id": student_id });
   }
 
-  async getSessionsByDate(date){
-
-
-    return await Session.find({date}).sort({session_id:1})
+  async getSessionsByDate(day) {
+    return await Session.find({ day,group:"2",isDeleted:false }).sort({ session_id: 1 });
   }
 
-  async updateAttendece(student_ids){
-
-    return await Student.updateMany({student_id:{$in:student_ids}},{$inc:{session:1}})
+  async updateAttendece(student_ids) {
+    return await Student.updateMany(
+      { student_id: { $in: student_ids } },
+      { $inc: { attend: 1 } }
+    );
   }
-  async endSeesion(_id){
-    return await Session.updateOne({_id},{isDeleted:true})
+  async endSeesion(_id) {
+    return await Session.updateOne({ _id }, { isDeleted: true });
   }
 };

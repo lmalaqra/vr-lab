@@ -29,7 +29,7 @@ function formatDate(date) {
     return `${yyyy}-${mm}-${dd}`;
 }
 
-function distributeShifts(availableHours, shiftLength, totalShifts, startDate) {
+function distributeShifts(availableHours, shiftLength, totalShifts, startDate,max_number,group) {
     const shifts = [];
     
     let totalAvailableSlots = 0;
@@ -62,7 +62,9 @@ function distributeShifts(availableHours, shiftLength, totalShifts, startDate) {
                 date: formatDate(today),
                 start: slots[i].start,
                 end: slots[i].end,
-                length: slots[i].length
+                length: slots[i].length,
+                max_number,
+                group
             });
             remainingShifts--;
         }
