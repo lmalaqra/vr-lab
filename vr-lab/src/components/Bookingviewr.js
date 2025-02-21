@@ -59,11 +59,7 @@ function Bookingviewr({ setBooked, booked, setChangeActive }) {
           <h1 className="head">
             {" "}
             <span className="head"> {getDayName(data.session.date)} </span>
-            <span>
-              {data.session.date.split("-")[2] +
-                "/" +
-                data.session.date.split("-")[1]}
-            </span>
+            
           </h1>
           <h1 className="head">
             {data.session.start + "-" + data.session.end}
