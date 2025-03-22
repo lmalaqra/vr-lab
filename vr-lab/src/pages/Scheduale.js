@@ -101,10 +101,21 @@ function Scheduale() {
 
   return (
     <div>
+      
+      {localStorage.getItem('group')==="2"&&<div className="text-center mx-auto shadow-lg border p-2 w-2/4 text-red-600 border-black">
+      <h1 className="text-center head mt-4 text-lg tracking-wide font-bold  "> تعليمات الحضور </h1>
+      <ol className="text-right">
+
+        <li>
+      يرجى الاتزام بحضور المواعيد و في حالة عدم استطاعتك الحضور تغيير الموعد قبل ٢٤ ساعه -
+          </li>
+          <li>الالتزام ببروتوكولات مكافحة العدوى في العيادات -</li>
+          <li>scrub + lab coat يمنع منعا باتا دخول العيادات بدون الزي الرسمي  -</li>
+          <li> تتضمن المتطلبات المرافبة للاجرءات العلاجية في تخصص العلاج التحفظي فقط ، ويمنع المساعدة او التدخل بالعلاجات بدون اذن الاخصائي المشرف في العيادات </li>
+          </ol></div>}
+
       <h1 className="text-center head mt-4 text-lg tracking-wide"> Please chose An appiontment </h1>
-      <h3 className="text-center font-serif w-3/6 mx-auto ">
-        **Make sure you and the patient are not late to the appointment 
-      </h3>
+
       <Bookingviewr
         setBooked={setBooked}
         booked={booked}
